@@ -13,9 +13,9 @@ export const DEMO_ACCOUNTS = [
     tagline: 'Student Dashboard • 8.5 CGPA (CSE)',
   },
   {
-    name: 'John Doe',
+    name: 'Pranit Kalra',
     role: 'TPO', // Recruiter
-    email: 'john.doe@globalrecruiting.com',
+    email: 'pranit.kalra@globalrecruiting.com',
     organization: 'Amazon Web Services',
     designation: 'Technical Talent Lead',
     avatarColor: 'bg-emerald-600',
