@@ -1,27 +1,46 @@
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import Navbar from './components/Navbar.jsx';
-import Home from './pages/Home.jsx';
-import Explore from './pages/Explore.jsx';
+import Explore from './components/Explore.jsx';
 import Footer from './components/Footer.jsx';
 import SignInModal from './components/SignInModal.jsx';
-import DashboardView from './components/DashboardView.jsx';
+
+// Homepage Sections
+import Hero from './components/homepage/Hero';
+import StatsBanner from './components/homepage/StatsBanner';
+import Features from './components/homepage/Features';
+import ActiveDrives from './components/homepage/ActiveDrives';
+import RecruiterWorkflow from './components/homepage/RecruiterWorkflow';
+import About from './components/homepage/About';
+import Faq from './components/homepage/Faq';
+import RecruiterBanner from './components/homepage/RecruiterBanner';
+import Testimonials from './components/homepage/Testimonials';
+
+function Home() {
+  return (
+    <>
+      <Hero />
+      <StatsBanner />
+      <Features />
+      <ActiveDrives />
+      <RecruiterWorkflow />
+      <About />
+      <Testimonials />
+      <Faq />
+      <RecruiterBanner />
+    </>
+  );
+}
 
 function AppContent() {
   const { view } = useAuth();
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-between">
-      {view === 'dashboard' ? (
-        <DashboardView />
-      ) : (
-        <>
-          <div>
-            <Navbar />
-            {view === 'explore' ? <Explore /> : <Home />}
-          </div>
-          <Footer />
-        </>
-      )}
+      <div>
+        <Navbar />
+        {view === 'explore' ? <Explore /> : <Home />}
+      </div>
+      <Footer />
       <SignInModal />
     </div>
   );
