@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Search, MapPin, DollarSign, Calendar, Send, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { INITIAL_JOBS } from '../data/mockData';
-import JobApplicationModal from './common/JobApplicationModal';
+// import JobApplicationModal from './common/JobApplicationModal';
 
 const CATEGORIES = ['All', 'Software', 'Data Science', 'Product', 'Design'];
 
