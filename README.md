@@ -5,7 +5,6 @@
 ![React](https://img.shields.io/badge/React-19.x-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ---
 
@@ -101,6 +100,7 @@ src/
 │   ├── AdminDashboard.jsx    # Master Admin dashboard container
 │   ├── Hero.jsx              # Landing hero banner
 │   ├── Navbar.jsx            # Responsive navigation header
+│   ├── Explore.jsx           # Public Job/Drive exploration page
 │   ├── RecruiterDashboard.jsx# Master Recruiter dashboard container
 │   ├── SignInModal.jsx       # 1-Click Demo & Auth Modal
 │   └── StudentDashboard.jsx  # Master Student dashboard container
@@ -108,15 +108,8 @@ src/
 │   └── AuthContext.jsx       # Simple role-based authentication & view state
 ├── data/
 │   └── mockData.js           # Centralized demo accounts, jobs, and drives
-├── pages/
-│   ├── Explore.jsx           # Public Job/Drive exploration page
-│   └── Home.jsx              # Landing page
 ├── App.jsx                   # Main App component
 └── main.jsx                  # React DOM root
 ```
 
 ---
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
