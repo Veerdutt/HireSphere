@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import Navbar from './components/Navbar.jsx';
 import Explore from './components/Explore.jsx';
@@ -16,6 +18,18 @@ import Faq from './components/homepage/Faq';
 import RecruiterBanner from './components/homepage/RecruiterBanner';
 import Testimonials from './components/homepage/Testimonials';
 
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+
+  return null;
+}
+
 function Home() {
   return (
     <>
@@ -32,32 +46,64 @@ function Home() {
   );
 }
 
-function AppContent() {
-  const { view } = useAuth();
+// Protected Dashboard route
+function ProtectedDashboard() {
+  const { user } = useAuth();
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+  return <DashboardView />;
+}
 
+// Public Layout for Main pages (Navbar + Content + Footer)
+function PublicLayout({ children }) {
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-between">
-      {view === 'dashboard' ? (
-        <DashboardView />
-      ) : (
-        <>
-          <div>
-            <Navbar />
-            {view === 'explore' ? <Explore /> : <Home />}
-          </div>
-          <Footer />
-        </>
-      )}
-      <SignInModal />
+      <div>
+        <Navbar />
+        {children}
+      </div>
+      <Footer />
     </div>
+  );
+}
+
+function AppRoutes() {
+  return (
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <PublicLayout>
+              <Home />
+            </PublicLayout>
+          }
+        />
+        <Route
+          path="/explore"
+          element={
+            <PublicLayout>
+              <Explore />
+            </PublicLayout>
+          }
+        />
+        <Route path="/dashboard" element={<ProtectedDashboard />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <SignInModal />
+    </>
   );
 }
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </Router>
   );
 }
 

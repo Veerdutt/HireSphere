@@ -6,10 +6,10 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { INITIAL_JOBS, INITIAL_STUDENT_APPLICATIONS } from '../data/mockData';
 
-import StudentOverview from './student/StudentOverview';
+// import StudentOverview from './student/StudentOverview';
 import StudentApplications from './student/StudentApplications';
-import StudentJobs from './student/StudentJobs';
-import StudentResume from './student/StudentResume';
+// import StudentJobs from './student/StudentJobs';
+// import StudentResume from './student/StudentResume';
 
 export default function StudentDashboard() {
   const { user, logout, setView } = useAuth();

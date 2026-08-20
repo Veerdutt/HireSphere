@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function Footer() {
   return (
     <footer className="bg-white border-t border-slate-100 py-14 text-left">
@@ -6,14 +8,14 @@ export default function Footer() {
           
           {/* Brand Info */}
           <div>
-            <div className="flex items-center gap-2.5 mb-3">
+            <Link to="/" className="flex items-center gap-2.5 mb-3 inline-flex">
               <img
                 src="/logo.png"
                 alt="HireSphere Logo"
                 className="w-8 h-8 object-contain rounded-lg shadow-sm"
               />
               <span className="text-lg font-bold tracking-tight text-blue-900">HireSphere</span>
-            </div>
+            </Link>
             <p className="text-xs text-slate-400 font-semibold leading-relaxed">
               Empowering students and campus recruiters with automated matching, instant applications, and real-time drive analytics.
             </p>
@@ -23,11 +25,11 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-bold text-[#0f294a] uppercase tracking-wider mb-4">Platform</h4>
             <ul className="space-y-2.5 text-xs text-slate-500 font-semibold">
-              <li><a href="#active-drives" className="hover:text-blue-600 transition-colors">Active Drives</a></li>
-              <li><a href="/explore" className="hover:text-blue-600 transition-colors">Explore Jobs</a></li>
-              <li><a href="#stats" className="hover:text-blue-600 transition-colors">Statistics</a></li>
-              <li><a href="#about" className="hover:text-blue-600 transition-colors">About Us</a></li>
-              <li><a href="#faq" className="hover:text-blue-600 transition-colors">Help & FAQ</a></li>
+              <li><a href="/#active-drives" className="hover:text-blue-600 transition-colors">Active Drives</a></li>
+              <li><Link to="/explore" className="hover:text-blue-600 transition-colors">Explore Jobs</Link></li>
+              <li><a href="/#stats" className="hover:text-blue-600 transition-colors">Statistics</a></li>
+              <li><a href="/#about" className="hover:text-blue-600 transition-colors">About Us</a></li>
+              <li><a href="/#faq" className="hover:text-blue-600 transition-colors">Help & FAQ</a></li>
             </ul>
           </div>
 

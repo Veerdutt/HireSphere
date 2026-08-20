@@ -1,40 +1,46 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  // Simple state for user, view, and login modal
+  const navigate = useNavigate();
+
+  // Simple state for user and login modal
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('hiresphere_user');
     return saved ? JSON.parse(saved) : null;
   });
 
-  const [view, setView] = useState('landing'); // 'landing' | 'explore' | 'dashboard'
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [signInDefaultTab, setSignInDefaultTab] = useState('demo');
 
-  // Keep view in sync when user logs in or out
-  useEffect(() => {
-    if (user) {
-      setView('dashboard');
+  // Compatibility helper for setView
+  const setView = (target) => {
+    if (target === 'landing' || target === 'home') {
+      navigate('/');
+    } else if (target === 'explore') {
+      navigate('/explore');
+    } else if (target === 'dashboard') {
+      navigate('/dashboard');
     } else {
-      setView((prev) => (prev === 'dashboard' ? 'landing' : prev));
+      navigate(target);
     }
-  }, [user]);
+  };
 
-  // Log in user
+  // Log in user and navigate to dashboard
   const login = (userData) => {
     localStorage.setItem('hiresphere_user', JSON.stringify(userData));
     setUser(userData);
-    setView('dashboard');
     setIsSignInOpen(false);
+    navigate('/dashboard');
   };
 
-  // Log out user
+  // Log out user and navigate to home
   const logout = () => {
     localStorage.removeItem('hiresphere_user');
     setUser(null);
-    setView('landing');
+    navigate('/');
   };
 
   // Modal controls
@@ -51,7 +57,6 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
-        view,
         setView,
         isSignInOpen,
         signInDefaultTab,
