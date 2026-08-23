@@ -32,7 +32,7 @@ export default function Hero() {
             {/* Live Placement Status Pill */}
             <div className="inline-flex items-center gap-2 rounded-full bg-[#e8f8f0] px-3.5 py-1 text-xs font-bold text-[#0f8a4f] shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#0f8a4f] animate-pulse"></span>
-              Placement Season 2025-26 Live
+              Placement Season 2026-27 Live
             </div>
 
             {/* Main Headline */}

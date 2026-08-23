@@ -8,7 +8,7 @@ export default function Footer() {
           
           {/* Brand Info */}
           <div>
-            <Link to="/" className="flex items-center gap-2.5 mb-3 inline-flex">
+            <Link to="/" className="items-center gap-2.5 mb-3 inline-flex">
               <img
                 src="/logo.png"
                 alt="HireSphere Logo"
