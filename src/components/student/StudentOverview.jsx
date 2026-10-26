@@ -1,8 +1,12 @@
+import { useSelector } from 'react-redux';
 import { Briefcase, Calendar, CheckCircle2, FileText, ArrowRight } from 'lucide-react';
+import { selectApplications } from '../../redux/slices/applicationsSlice';
 import StatCard from '../common/StatCard';
 import StatusBadge from '../common/StatusBadge';
 
-export default function StudentOverview({ user, applications, onNavigateTab }) {
+export default function StudentOverview({ user, applications: propApplications, onNavigateTab }) {
+  const reduxApplications = useSelector(selectApplications);
+  const applications = propApplications || reduxApplications;
   const studentName = user?.name || 'Arjun Mehta';
   const branch = user?.branch || 'Computer Science & Engineering';
   const cgpa = user?.cgpa || '8.5';
@@ -15,20 +19,34 @@ export default function StudentOverview({ user, applications, onNavigateTab }) {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-sm mb-2">
+      {/* Welcome Banner with Campus Background */}
+      <div className="relative overflow-hidden rounded-2xl p-6 md:p-8 shadow-lg flex flex-col md:flex-row md:items-center md:justify-between gap-6 border border-slate-700/20">
+        {/* Background Photo */}
+        <img
+          src="/images/campus-banner.jpg"
+          alt="Campus Architecture"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+        {/* Rich Gradient Overlay for Crisp Text Contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-blue-950/85 to-indigo-950/75 backdrop-blur-[1px]" />
+
+        {/* Content */}
+        <div className="relative z-10">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/25 border border-blue-400/30 text-blue-200 text-xs font-semibold backdrop-blur-md mb-2.5 shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             Student Portal • {college}
           </span>
-          <h2 className="text-2xl font-bold">Welcome back, {studentName}! 👋</h2>
-          <p className="text-blue-100 text-sm mt-1">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+            Welcome back, {studentName}! 👋
+          </h2>
+          <p className="text-slate-200 text-sm mt-1.5 font-medium max-w-xl">
             {branch} • CGPA: {cgpa} • Ready for placement season 2026
           </p>
         </div>
+
         <button
           onClick={() => onNavigateTab('jobs')}
-          className="self-start md:self-auto flex items-center gap-2 bg-white text-blue-700 font-semibold px-4 py-2.5 rounded-xl hover:bg-blue-50 transition shadow-sm text-sm"
+          className="relative z-10 self-start md:self-auto flex items-center gap-2 bg-white hover:bg-blue-50 text-blue-900 font-bold px-5 py-3 rounded-xl transition shadow-lg text-xs md:text-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
         >
           Explore Campus Drives
           <ArrowRight className="w-4 h-4" />

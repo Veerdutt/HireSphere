@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { 
-  Building2, Rocket, ShieldCheck, CheckCircle2, 
-  Users, Zap, FileSpreadsheet, Download, 
+import {
+  Building2, Rocket, ShieldCheck, CheckCircle2,
+  Users, Zap, FileSpreadsheet, Download,
   Check, Sparkles, Send, X
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { validateEmail } from '../../utils/validation';
 
 const RECRUITER_STEPS = [
   {
@@ -58,6 +59,7 @@ export default function RecruiterWorkflow() {
   const [brochureSubmitted, setBrochureSubmitted] = useState(false);
   const [recruiterEmail, setRecruiterEmail] = useState('');
   const [recruiterOrg, setRecruiterOrg] = useState('');
+  const [brochureError, setBrochureError] = useState('');
 
   const handleStartHiring = () => {
     if (user) {
@@ -69,6 +71,14 @@ export default function RecruiterWorkflow() {
 
   const handleBrochureRequest = (e) => {
     e.preventDefault();
+    setBrochureError('');
+
+    const emailCheck = validateEmail(recruiterEmail);
+    if (!emailCheck.isValid) {
+      setBrochureError(emailCheck.error);
+      return;
+    }
+
     setBrochureSubmitted(true);
     setTimeout(() => {
       setBrochureSubmitted(false);
@@ -81,7 +91,7 @@ export default function RecruiterWorkflow() {
   return (
     <section id="for-recruiters" className="py-20 bg-white border-t border-slate-100 text-left">
       <div className="max-w-6xl mx-auto px-6">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-blue-600 bg-blue-50 border border-blue-100 mb-3">
@@ -96,14 +106,13 @@ export default function RecruiterWorkflow() {
           </p>
         </div>
 
-        {/* 1. Corporate Partners Logo Grid */}
         <div className="mb-16 p-6 bg-[#f8fafc] rounded-3xl border border-slate-150">
           <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">
             Trusted by Talent Acquisition Teams Across Leading Global Tech Companies
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             {CORPORATE_PARTNERS.map((partner) => (
-              <div 
+              <div
                 key={partner.name}
                 className="bg-white rounded-2xl p-3 border border-slate-200/70 shadow-sm flex flex-col items-center justify-center text-center hover:border-blue-300 hover:shadow-md transition-all group cursor-default"
               >
@@ -117,12 +126,11 @@ export default function RecruiterWorkflow() {
           </div>
         </div>
 
-        {/* 2. 4-Step Recruitment Workflow Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {RECRUITER_STEPS.map((stepItem, idx) => {
             const Icon = stepItem.icon;
             return (
-              <div 
+              <div
                 key={stepItem.step}
                 className="bg-white rounded-3xl p-6 border border-slate-150 shadow-sm hover:shadow-md hover:border-blue-200 transition-all flex flex-col justify-between relative group"
               >
@@ -143,7 +151,7 @@ export default function RecruiterWorkflow() {
                   <h3 className="text-base font-extrabold text-[#0f294a] mb-2 leading-snug">
                     {stepItem.title}
                   </h3>
-                  
+
                   <p className="text-xs text-slate-500 font-medium leading-relaxed">
                     {stepItem.desc}
                   </p>
@@ -158,7 +166,6 @@ export default function RecruiterWorkflow() {
           })}
         </div>
 
-        {/* 3. Recruiter Bottom CTA Banner & Brochure Action */}
         <div className="bg-gradient-to-br from-[#0f294a] to-[#1e3a8a] rounded-3xl p-8 md:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
             <span className="inline-flex items-center gap-1 text-[10px] font-extrabold tracking-wider uppercase text-blue-300 bg-blue-900/50 px-2.5 py-0.5 rounded-full border border-blue-400/20">
@@ -193,7 +200,6 @@ export default function RecruiterWorkflow() {
 
       </div>
 
-      {/* Placement Brochure & Drive Request Modal */}
       {showBrochureModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in text-left">
           <div className="bg-white rounded-3xl max-w-md w-full border border-slate-100 shadow-2xl p-7 relative">
@@ -247,6 +253,12 @@ export default function RecruiterWorkflow() {
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800"
                   />
                 </div>
+
+                {brochureError && (
+                  <p className="text-red-600 text-xs font-semibold bg-red-50 p-2.5 rounded-lg border border-red-200">
+                    {brochureError}
+                  </p>
+                )}
 
                 <div className="pt-2 flex justify-end gap-2">
                   <button

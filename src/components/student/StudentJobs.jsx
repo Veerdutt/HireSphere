@@ -58,15 +58,15 @@ export default function StudentJobs({ jobs, appliedJobIds, onApplySuccess }) {
                 <div className="mt-3 space-y-1.5 text-xs text-slate-600">
                   <div className="flex items-center gap-1.5">
                     <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="font-semibold text-slate-900">{job.salary}</span>
+                    <span className="font-semibold text-slate-900">{job.salary || job.ctc}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{job.location}</span>
+                    <span>{job.location || 'On-Campus'}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Deadline: {job.deadline}</span>
+                    <span>Deadline: {job.deadline || job.date}</span>
                   </div>
                 </div>
 
@@ -114,7 +114,7 @@ export default function StudentJobs({ jobs, appliedJobIds, onApplySuccess }) {
             onApplySuccess(job);
             setSelectedJob(null);
           }}
-        />
+        />  
       )}
     </div>
   );

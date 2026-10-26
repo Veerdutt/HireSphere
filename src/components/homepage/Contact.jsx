@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { validateEmail } from '../../utils/validation';
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -10,14 +11,74 @@ export default function Contact() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!form.firstName.trim()) {
+      newErrors.firstName = 'First name is required.';
+    } else if (form.firstName.trim().length < 2) {
+      newErrors.firstName = 'First name must be at least 2 characters.';
+    }
+
+    if (!form.lastName.trim()) {
+      newErrors.lastName = 'Last name is required.';
+    } else if (form.lastName.trim().length < 2) {
+      newErrors.lastName = 'Last name must be at least 2 characters.';
+    }
+
+    const emailCheck = validateEmail(form.email);
+    if (!emailCheck.isValid) {
+      newErrors.email = emailCheck.error;
+    }
+
+    if (!form.subject.trim()) {
+      newErrors.subject = 'Subject is required.';
+    } else if (form.subject.trim().length < 3) {
+      newErrors.subject = 'Subject must be at least 3 characters.';
+    }
+
+    if (!form.message.trim()) {
+      newErrors.message = 'Message is required.';
+    } else if (form.message.trim().length < 10) {
+      newErrors.message = 'Please enter at least 10 characters.';
+    }
+
+    return newErrors;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
     setSubmitted(true);
+  };
+
+  const handleReset = () => {
+    setForm({
+      firstName: '',
+      lastName: '',
+      email: '',
+      subject: '',
+      message: '',
+    });
+    setErrors({});
+    setSubmitted(false);
   };
 
   return (
@@ -70,83 +131,157 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm p-8">
+          <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
             <h3 className="text-lg font-bold text-gray-900 mb-1">Send us a message</h3>
             <p className="text-sm text-gray-500 mb-6">
               We'll get back to you within 24 hours.
             </p>
 
             {submitted ? (
-              <div className="rounded-lg bg-green-50 text-green-700 text-sm p-4">
-                Thanks — your message has been sent. We'll be in touch soon.
+              <div className="rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 p-6 text-center space-y-3">
+                <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle2 size={26} />
+                </div>
+                <h4 className="font-bold text-lg text-emerald-900">Message Sent Successfully!</h4>
+                <p className="text-sm text-emerald-700">
+                  Thanks, <span className="font-semibold">{form.firstName}</span>! We've received your message and will be in touch soon.
+                </p>
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
+                  >
+                    Send another message
+                  </button>
+                </div>
               </div>
             ) : (
-              <form className="space-y-5" onSubmit={handleSubmit}>
+              <form className="space-y-4" onSubmit={handleSubmit} noValidate>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                      First Name
+                      First Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="firstName"
                       value={form.firstName}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="John"
+                      className={`w-full rounded-lg border px-3 py-2.5 text-sm transition-all focus:outline-none focus:ring-2 ${
+                        errors.firstName
+                          ? 'border-red-400 bg-red-50/20 focus:ring-red-400'
+                          : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500'
+                      }`}
                     />
+                    {errors.firstName && (
+                      <p className="text-red-600 text-xs mt-1.5 font-medium flex items-center gap-1">
+                        <AlertCircle size={13} className="shrink-0" />
+                        <span>{errors.firstName}</span>
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                      Last Name
+                      Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="lastName"
                       value={form.lastName}
                       onChange={handleChange}
-                      className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Doe"
+                      className={`w-full rounded-lg border px-3 py-2.5 text-sm transition-all focus:outline-none focus:ring-2 ${
+                        errors.lastName
+                          ? 'border-red-400 bg-red-50/20 focus:ring-red-400'
+                          : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500'
+                      }`}
                     />
+                    {errors.lastName && (
+                      <p className="text-red-600 text-xs mt-1.5 font-medium flex items-center gap-1">
+                        <AlertCircle size={13} className="shrink-0" />
+                        <span>{errors.lastName}</span>
+                      </p>
+                    )}
                   </div>
                 </div>
+
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                    Email
+                    Email <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     name="email"
                     value={form.email}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="name@example.com"
+                    className={`w-full rounded-lg border px-3 py-2.5 text-sm transition-all focus:outline-none focus:ring-2 ${
+                      errors.email
+                        ? 'border-red-400 bg-red-50/20 focus:ring-red-400'
+                        : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500'
+                    }`}
                   />
+                  {errors.email && (
+                    <p className="text-red-600 text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <AlertCircle size={13} className="shrink-0" />
+                      <span>{errors.email}</span>
+                    </p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                    Subject
+                    Subject <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     name="subject"
                     value={form.subject}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g., Campus drive inquiry"
+                    className={`w-full rounded-lg border px-3 py-2.5 text-sm transition-all focus:outline-none focus:ring-2 ${
+                      errors.subject
+                        ? 'border-red-400 bg-red-50/20 focus:ring-red-400'
+                        : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500'
+                    }`}
                   />
+                  {errors.subject && (
+                    <p className="text-red-600 text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <AlertCircle size={13} className="shrink-0" />
+                      <span>{errors.subject}</span>
+                    </p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                    Message
+                    Message <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     name="message"
-                    rows={5}
+                    rows={4}
                     value={form.message}
                     onChange={handleChange}
-                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    placeholder="How can we help you?"
+                    className={`w-full rounded-lg border px-3 py-2.5 text-sm transition-all focus:outline-none focus:ring-2 resize-none ${
+                      errors.message
+                        ? 'border-red-400 bg-red-50/20 focus:ring-red-400'
+                        : 'border-gray-200 focus:border-blue-500 focus:ring-blue-500'
+                    }`}
                   />
+                  {errors.message && (
+                    <p className="text-red-600 text-xs mt-1.5 font-medium flex items-center gap-1">
+                      <AlertCircle size={13} className="shrink-0" />
+                      <span>{errors.message}</span>
+                    </p>
+                  )}
                 </div>
+
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors text-white text-sm font-semibold py-3"
+                  className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors text-white text-sm font-semibold py-3 cursor-pointer shadow-sm hover:shadow"
                 >
                   Send Message
                 </button>

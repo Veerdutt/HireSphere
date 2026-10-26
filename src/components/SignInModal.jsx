@@ -5,6 +5,7 @@ import {
   AlertCircle, ArrowRight, Check
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { validateEmail } from '../utils/validation';
 
 export default function SignInModal() {
   const { isSignInOpen, closeSignIn, login, signInDefaultTab } = useAuth();
@@ -52,9 +53,9 @@ export default function SignInModal() {
       tagline: 'Student Dashboard • 8.5 CGPA (CSE)',
     },
     {
-      name: 'Pranit Kalra',
+      name: 'Pranav Verma',
       role: 'TPO',
-      email: 'pranit.kalra@globalrecruiting.com',
+      email: 'pranav.verma@globalrecruiting.com',
       avatarColor: 'bg-emerald-600',
       icon: Building,
       themeColor: 'border-emerald-100 bg-emerald-50/10 hover:bg-emerald-50/40 hover:border-emerald-300 text-emerald-600',
@@ -87,6 +88,12 @@ export default function SignInModal() {
 
     if (!email.trim() || !password) {
       setError('Please fill in your email address and password');
+      return;
+    }
+
+    const emailCheck = validateEmail(email);
+    if (!emailCheck.isValid) {
+      setError(emailCheck.error);
       return;
     }
 
@@ -149,8 +156,9 @@ export default function SignInModal() {
       return;
     }
 
-    if (!signUpEmail.includes('@') || !signUpEmail.includes('.')) {
-      setError('Please provide a valid email address');
+    const emailCheck = validateEmail(signUpEmail);
+    if (!emailCheck.isValid) {
+      setError(emailCheck.error);
       return;
     }
 
@@ -480,7 +488,7 @@ export default function SignInModal() {
                     signUpRole === 'Student'
                       ? 'e.g. Arjun Mehta'
                       : signUpRole === 'TPO'
-                        ? 'e.g. Pranit Kalra'
+                        ? 'e.g. Pranav Verma'
                         : 'e.g. Dr. Arvind Mehta'
                   }
                   className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-800 text-xs font-medium"

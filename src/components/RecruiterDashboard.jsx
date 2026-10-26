@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   LayoutGrid, Users, PlusCircle, LogOut, Globe
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { INITIAL_RECRUITER_CANDIDATES, INITIAL_ADMIN_DRIVES } from '../data/mockData';
+import { createRecruiterDrive, selectDrives } from '../redux/slices/drivesSlice';
+import { selectCandidates, updateCandidateStatus } from '../redux/slices/candidatesSlice';
 
 import RecruiterOverview from './recruiter/RecruiterOverview';
 import RecruiterPostDrive from './recruiter/RecruiterPostDrive';
@@ -11,20 +13,19 @@ import RecruiterApplicants from './recruiter/RecruiterApplicants';
 
 export default function RecruiterDashboard() {
   const { user, logout, setView } = useAuth();
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Simple local states for drives and candidate pipeline
-  const [drives, setDrives] = useState(INITIAL_ADMIN_DRIVES);
-  const [candidates, setCandidates] = useState(INITIAL_RECRUITER_CANDIDATES);
+  // Redux global states for drives and candidate pipeline
+  const drives = useSelector(selectDrives);
+  const candidates = useSelector(selectCandidates);
 
   const handleUpdateCandidateStatus = (candidateId, newStatus) => {
-    setCandidates((prev) =>
-      prev.map((c) => (c.id === candidateId ? { ...c, status: newStatus } : c))
-    );
+    dispatch(updateCandidateStatus({ id: candidateId, status: newStatus }));
   };
 
   const handleDriveCreated = (newDrive) => {
-    setDrives((prev) => [newDrive, ...prev]);
+    dispatch(createRecruiterDrive(newDrive));
   };
 
   const navItems = [

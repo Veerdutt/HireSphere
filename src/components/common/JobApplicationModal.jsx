@@ -57,7 +57,7 @@ export default function JobApplicationModal({ job, onClose, onSubmitSuccess }) {
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
             {/* Compensation & Eligibility Info */}
             <div className="bg-blue-50/60 border border-blue-100 rounded-xl p-3 text-xs text-blue-900 space-y-1">
-              <p><span className="font-semibold">Package / Stipend:</span> {job.salary}</p>
+              <p><span className="font-semibold">Package / Stipend:</span> {job.salary || job.ctc}</p>
               {job.eligibility && <p><span className="font-semibold">Eligibility:</span> {job.eligibility}</p>}
             </div>
 

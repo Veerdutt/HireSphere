@@ -1,19 +1,24 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Search, MapPin, DollarSign, Calendar, Send, Check } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { INITIAL_JOBS } from '../data/mockData';
+import { applyToJob, selectAppliedJobIds } from '../redux/slices/applicationsSlice';
+import { selectJobs } from '../redux/slices/drivesSlice';
 import JobApplicationModal from './common/JobApplicationModal';
 
 const CATEGORIES = ['All', 'Software', 'Data Science', 'Product', 'Design'];
 
 export default function Explore() {
   const { user, openSignIn } = useAuth();
+  const dispatch = useDispatch();
+  const appliedIds = useSelector(selectAppliedJobIds);
+  const jobs = useSelector(selectJobs);
+
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [appliedIds, setAppliedIds] = useState([]);
   const [selectedJobForModal, setSelectedJobForModal] = useState(null);
 
-  const filteredJobs = INITIAL_JOBS.filter((job) => {
+  const filteredJobs = jobs.filter((job) => {
     const matchesCategory = selectedCategory === 'All' || job.category === selectedCategory;
     const matchesSearch =
       job.role.toLowerCase().includes(search.toLowerCase()) ||
@@ -31,7 +36,7 @@ export default function Explore() {
   };
 
   const handleApplicationSuccess = (job) => {
-    setAppliedIds((prev) => [...prev, job.id]);
+    dispatch(applyToJob(job));
     setSelectedJobForModal(null);
   };
 
@@ -115,15 +120,15 @@ export default function Explore() {
                   <div className="mt-4 space-y-1.5 text-xs text-slate-600">
                     <div className="flex items-center gap-2">
                       <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="font-bold text-slate-900">{job.salary}</span>
+                      <span className="font-bold text-slate-900">{job.salary || job.ctc}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                      <span>{job.location}</span>
+                      <span>{job.location || 'On-Campus'}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                      <span>Apply by: {job.deadline}</span>
+                      <span>Apply by: {job.deadline || job.date}</span>
                     </div>
                   </div>
 

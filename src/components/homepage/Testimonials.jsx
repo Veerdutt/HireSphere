@@ -10,8 +10,8 @@ const TESTIMONIALS = [
       "HireSphere made my job search incredibly easy. I found my dream job within weeks of using the platform. The interface is intuitive and the opportunities are high-quality.",
   },
   {
-    initials: 'PK',
-    name: 'Pranit Kalra',
+    initials: 'PV',
+    name: 'Pranav Verma',
     role: 'TPO at Engineering College',
     org: 'NIT Warangal',
     quote:

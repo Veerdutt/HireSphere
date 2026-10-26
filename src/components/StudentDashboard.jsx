@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   LayoutGrid, Briefcase, FileText, CheckCircle2,
   LogOut, Globe
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { INITIAL_JOBS, INITIAL_STUDENT_APPLICATIONS } from '../data/mockData';
+import { applyToJob, selectApplications, selectAppliedJobIds } from '../redux/slices/applicationsSlice';
+import { selectJobs } from '../redux/slices/drivesSlice';
 
 import StudentOverview from './student/StudentOverview';
 import StudentApplications from './student/StudentApplications';
@@ -13,27 +15,17 @@ import StudentResume from './student/StudentResume';
 
 export default function StudentDashboard() {
   const { user, logout, setView } = useAuth();
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Simple local state for applied jobs and application list
-  const [applications, setApplications] = useState(INITIAL_STUDENT_APPLICATIONS);
-  const [appliedJobIds, setAppliedJobIds] = useState([1]); // Default applied to first job
+  // Redux global state for applications and campus drives
+  const applications = useSelector(selectApplications);
+  const appliedJobIds = useSelector(selectAppliedJobIds);
+  const jobs = useSelector(selectJobs);
 
   // Apply handler
   const handleApplySuccess = (job) => {
-    setAppliedJobIds((prev) => [...prev, job.id]);
-    const newApp = {
-      id: Date.now(),
-      company: job.company,
-      role: job.role,
-      appliedDate: 'Just now',
-      status: 'Applied',
-      nextStep: 'Application Screening',
-      salary: job.salary,
-      logoLetter: job.logoLetter || job.company[0],
-      logoBg: job.logoBg || 'bg-blue-50 text-blue-600',
-    };
-    setApplications((prev) => [newApp, ...prev]);
+    dispatch(applyToJob(job));
   };
 
   const navItems = [
@@ -139,7 +131,7 @@ export default function StudentDashboard() {
 
         {activeTab === 'jobs' && (
           <StudentJobs
-            jobs={INITIAL_JOBS}
+            jobs={jobs}
             appliedJobIds={appliedJobIds}
             onApplySuccess={handleApplySuccess}
           />

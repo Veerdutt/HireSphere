@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   LayoutGrid, Building, ShieldCheck, LogOut, Globe
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { INITIAL_ADMIN_DRIVES, INITIAL_ADMIN_STUDENTS } from '../data/mockData';
+import { INITIAL_ADMIN_STUDENTS } from '../data/mockData';
+import { adminAddDrive, selectDrives, updateDriveStatus } from '../redux/slices/drivesSlice';
 
 import AdminOverview from './admin/AdminOverview';
 import AdminDrives from './admin/AdminDrives';
@@ -11,20 +13,19 @@ import AdminStudents from './admin/AdminStudents';
 
 export default function AdminDashboard() {
   const { user, logout, setView } = useAuth();
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Simple local state for campus drives & students
-  const [drives, setDrives] = useState(INITIAL_ADMIN_DRIVES);
+  // Redux global state for campus drives & local students
+  const drives = useSelector(selectDrives);
   const [students, setStudents] = useState(INITIAL_ADMIN_STUDENTS);
 
   const handleUpdateDriveStatus = (driveId, newStatus) => {
-    setDrives((prev) =>
-      prev.map((d) => (d.id === driveId ? { ...d, status: newStatus } : d))
-    );
+    dispatch(updateDriveStatus({ id: driveId, status: newStatus }));
   };
 
   const handleAddNewDrive = (newDrive) => {
-    setDrives((prev) => [newDrive, ...prev]);
+    dispatch(adminAddDrive(newDrive));
   };
 
   const handleToggleStudentVerification = (studentId) => {
